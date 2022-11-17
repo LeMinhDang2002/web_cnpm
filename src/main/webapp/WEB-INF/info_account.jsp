@@ -51,5 +51,9 @@
         <input type="text" id="email" name="email" value="${user.email}"><br><br>
         <input type="submit" value="Submit">
     </form>
+    <form method="get">
+        <input type="hidden" name="action" value="cancel"><br><br>
+        <input type="submit" value="Submit">
+    </form>
 </body>
 </html>

@@ -23,7 +23,7 @@ public class Transfer extends HttpServlet {
         Cookie[] cookies = req.getCookies();
         Cookie[] c = cookies;
 
-        if(c == null || c.length == 2){
+        if(c == null || c.length == 1){
             String url = "/home";
             getServletContext().getRequestDispatcher(url)
                     .forward(req, resp);

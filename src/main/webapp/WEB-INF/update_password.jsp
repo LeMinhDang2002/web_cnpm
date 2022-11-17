@@ -23,5 +23,9 @@
         <input type="text" id="code_verify" name="code_verify"><br>
         <input type="submit" value="Sua">
     </form>
+    <form method="get">
+        <input type="hidden" name="action" value="cancel"><br><br>
+        <input type="submit" value="Cancel">
+    </form>
 </body>
 </html>

@@ -19,8 +19,7 @@ public class Page_Index extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Cookie[] c = req.getCookies();
-        System.out.println(c.length);
-        if(c == null|| c.length ==2){
+        if(c == null || c.length==1){
             String url = "/home.jsp";
             getServletContext().getRequestDispatcher(url)
                     .forward(req, resp);

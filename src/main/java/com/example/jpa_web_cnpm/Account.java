@@ -13,38 +13,46 @@ import java.util.List;
 public class Account extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//        String url = "/WEB-INF/info_account.jsp";
-//
-//        getServletContext().getRequestDispatcher(url)
-//                .forward(req, resp);
-//        doPost(req,resp);
-        Cookie[] cookies = req.getCookies();
-        Cookie[] c = cookies;
-
-        if(c == null || c.length == 2){
-            String url = "/home";
-            getServletContext().getRequestDispatcher(url)
-                    .forward(req, resp);
+        String action = req.getParameter("action");
+        if(action == null){
+            action = "update_account";
         }
-        else {
-            String url = "/WEB-INF/info_account.jsp";
-            getServletContext().getRequestDispatcher(url)
-                    .forward(req, resp);
+
+        if(action.equals("update_account")){
+            Cookie[] cookies = req.getCookies();
+            Cookie[] c = cookies;
+
+            if(c == null || c.length ==1){
+                resp.sendRedirect("/JPA_WEB_CNPM_war_exploded/home");
+            }
+            else {
+                String url = "/WEB-INF/info_account.jsp";
+
+                String number_phone = c[1].getValue().toString();
+                System.out.println(number_phone);
+                AccountEntity account = AccountDAO.getAccount(number_phone);
+                req.setAttribute("user", account);
+
+                getServletContext().getRequestDispatcher(url)
+                        .forward(req, resp);
+            }
+        }
+        if(action.equals("cancel")){
+            resp.sendRedirect("/JPA_WEB_CNPM_war_exploded/home");
         }
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String url = "";
-        HttpSession session = req.getSession();
         String action = req.getParameter("action");
-        System.out.println(action);
 
         if(action == null) {
-            List<AccountEntity> accounts = AccountDAO.getAccount();
-//        System.out.println(accounts);
-            session.setAttribute("accounts", accounts);
             System.out.println(action);
+            url = "/WEB-INF/info_account.jsp";
+            getServletContext()
+                    .getRequestDispatcher(url)
+                    .forward(req, resp);
         } else if (action.equals("update_account")) {
             AccountEntity account = AccountDAO.getAccount(req.getParameter("number_phone"));
 
@@ -68,14 +76,7 @@ public class Account extends HttpServlet {
             accountUpdate.setPassword(password);
 
             AccountDAO.Update_Account(accountUpdate);
-
-//            List<AccountEntity> accounts = AccountDAO.getAccount();
-//            session.setAttribute("accounts", accounts);
         }
-
-        url = "/WEB-INF/info_account.jsp";
-        getServletContext()
-                .getRequestDispatcher(url)
-                .forward(req, resp);
+        resp.sendRedirect("/JPA_WEB_CNPM_war_exploded/infor_account");
     }
 }
