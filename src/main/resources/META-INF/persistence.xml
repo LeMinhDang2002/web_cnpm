@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd"
+             version="2.2">
+    <persistence-unit name="default">
+
+        <class>com.example.entity.AccountEntity</class>
+        <class>com.example.entity.DepositEntity</class>
+        <class>com.example.entity.TransactionAccountEntity</class>
+        <class>com.example.entity.TransferEntity</class>
+        <properties>
+            <property name="hibernate.connection.url"
+                      value="jdbc:postgresql://dpg-cdhkrb9a6gdsnlllc95g-a.singapore-postgres.render.com:5432/cnpm_web_database"/>
+            <property name="hibernate.connection.driver_class" value="org.postgresql.Driver"/>
+            <property name="hibernate.connection.username" value="cnpm_web_database_user"/>
+            <property name="hibernate.connection.password" value="UNryf2Eb9z0tIJBtYMBqaJXw5nelZC78"/>
+            <property name="" value=""/>
+        </properties>
+    </persistence-unit>
+</persistence>
