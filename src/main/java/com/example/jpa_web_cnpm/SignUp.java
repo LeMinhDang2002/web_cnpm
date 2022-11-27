@@ -1,7 +1,9 @@
 package com.example.jpa_web_cnpm;
 
 import com.example.data.AccountDAO;
+import com.example.data.TransactionAccount_DAO;
 import com.example.entity.AccountEntity;
+import com.example.entity.TransactionAccountEntity;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,16 +16,16 @@ import java.util.Date;
 public class SignUp extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String url = "/WEB-INF/guest/sign-up/input-basic-information.jsp";
-        getServletContext().getRequestDispatcher(url)
-                .forward(req, resp);
+            String url = "/views/guest/sign-up/input-basic-information.jsp";
+            getServletContext().getRequestDispatcher(url)
+                    .forward(req, resp);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = req.getParameter("action");
         HttpSession session = req.getSession();
-        session.setMaxInactiveInterval(300);// Set 5'
+//        session.setMaxInactiveInterval(300);// Set 5'
 
         if(action == null){
             action = "input-basic-information";
@@ -45,12 +47,12 @@ public class SignUp extends HttpServlet {
             session.setAttribute("district", district);
             session.setAttribute("province", province);
 
-            String url = "/WEB-INF/guest/sign-up/input-email-phone-number.jsp";
+            String url = "/views/guest/sign-up/input-email-phone-number.jsp";
             getServletContext().getRequestDispatcher(url)
                     .forward(req, resp);
         }
-        if (action.equals("input-email-phone-number")){
-
+        else if (action.equals("input-email-phone-number"))
+        {
             String email = req.getParameter("email");
             String number_phone = req.getParameter("phone-number");
             String username = req.getParameter("username");
@@ -68,7 +70,7 @@ public class SignUp extends HttpServlet {
                     AccountDAO.check_exists_Number_Phone(number_phone) == true ||
                     AccountDAO.check_exists_Email(email) == true ||
                     AccountDAO.isValid(email) == false){
-                String url = "/WEB-INF/guest/sign-up/input-email-phone-number.jsp";
+                String url = "/views/guest/sign-up/input-email-phone-number.jsp";
                 getServletContext().getRequestDispatcher(url)
                         .forward(req, resp);
             }
@@ -87,17 +89,13 @@ public class SignUp extends HttpServlet {
                 session.setAttribute("code_verify", code_verify);
                 session.setAttribute("check_number_try", tmp);
 
-                String url = "/WEB-INF/guest/sign-up/code_verify.jsp";
+                String url = "/views/guest/sign-up/input-code-verify.jsp";
                 getServletContext().getRequestDispatcher(url)
                         .forward(req, resp);
-
-//                AccountDAO.Insert_Account(account);
-//                setcookies(req,resp,number_phone);
-//
-//                resp.sendRedirect("/JPA_WEB_CNPM_war_exploded/home");
             }
         }
-        if(action.equals("input-code-verify")){
+        else if(action.equals("input-code-verify"))
+        {
             String input_code_verify = req.getParameter("code-verify");
             String code_verify = session.getAttribute("code_verify").toString();
             int check_number_try = Integer.parseInt(session.getAttribute("check_number_try").toString());
@@ -111,10 +109,10 @@ public class SignUp extends HttpServlet {
             if (input_code_verify.equals(code_verify) == false)
             {
                 if(check_number_try == 3){
-                    resp.sendRedirect("/JPA_WEB_CNPM_war_exploded/home");
+                    resp.sendRedirect("/home");
                 }
                 else {
-                    String url = "/WEB-INF/guest/sign-up/code_verify.jsp";
+                    String url = "/views/guest/sign-up/input-code-verify.jsp";
                     getServletContext().getRequestDispatcher(url)
                             .forward(req, resp);
                 }
@@ -122,20 +120,17 @@ public class SignUp extends HttpServlet {
             else {
                 AccountEntity account = (AccountEntity) session.getAttribute("account");
                 AccountDAO.Insert_Account(account);
-                setcookies(req,resp,account.getNumberPhone());
+                TransactionAccountEntity transactionAccountEntity = new TransactionAccountEntity();
+                transactionAccountEntity.setAccountNumber(account.getNumberPhone());
+                transactionAccountEntity.setBalance(Double.valueOf(0));
+                TransactionAccount_DAO.Insert_TransactionAccount(transactionAccountEntity);
 
-                resp.sendRedirect("/JPA_WEB_CNPM_war_exploded/home");
+                session.setAttribute("username", account.getNumberPhone().toString());
+                resp.sendRedirect("/home");
             }
 
+        } else if (action.equals("cancel")) {
+            resp.sendRedirect("/home");
         }
-    }
-    private void setcookies(HttpServletRequest req,
-                            HttpServletResponse resp, String username){
-
-        Cookie c1 = new Cookie("username", username);
-        c1.setMaxAge(60*30*365); //1 year
-        c1.setPath("/");
-        c1.setValue(username);
-        resp.addCookie(c1);
     }
 }

@@ -3,13 +3,11 @@ package com.example.jpa_web_cnpm;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.*;
 import java.io.IOException;
+import java.util.Random;
 
-@WebServlet(value = "/home")
+@WebServlet(name = "home" ,value = "/home")
 public class Page_Index extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -18,16 +16,22 @@ public class Page_Index extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Cookie[] c = req.getCookies();
-        if(c == null || c.length==1){
-            String url = "/home.jsp";
+        HttpSession session = req.getSession();
+        System.out.println(session.getAttribute("username"));
+
+        if(session.getAttribute("username") == null){
+            String url = "/views/guest/main-page.jsp";
             getServletContext().getRequestDispatcher(url)
                     .forward(req, resp);
         }
         else {
-            String url = "/WEB-INF/customer/main-page.jsp";
+            String url = "/views/customer/main-page.jsp";
             getServletContext().getRequestDispatcher(url)
                     .forward(req, resp);
         }
+//        Random theRandom = new Random();
+//        theRandom.nextInt(999999);
+//        System.out.println(theRandom.toString());
+//        String myHash = DigestUtils.md5Hex("" +	theRandom);
     }
 }

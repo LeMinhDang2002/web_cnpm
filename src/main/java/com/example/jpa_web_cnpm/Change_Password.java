@@ -21,37 +21,36 @@ public class Change_Password extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String url = "/JPA_WEB_CNPM_war_exploded/change-password";
-        Cookie[] c = req.getCookies();
+        HttpSession session = req.getSession();
 
-
-        String username = c[1].getValue().toString();
+        String username = session.getAttribute("username").toString();
         AccountEntity account = AccountDAO.getAccount(username);
         String password = account.getPassword();
 
-        String oldpassword = req.getParameter("oldpassword");
-        String newpassword = req.getParameter("newpassword");
-        String confirm_newpassword = req.getParameter("confirm_newpassword");
-        String code_verify = req.getParameter("code_verify");
+        String oldpassword = req.getParameter("old-password");
+        String newpassword = req.getParameter("new-password");
+        String confirm_newpassword = req.getParameter("retype-new-password");
+        String code_verify = req.getParameter("code-verify");
         String verify = String.valueOf(code);
 
         if(oldpassword.equals(password) == false){
-            url = "/JPA_WEB_CNPM_war_exploded/change-password";
+            url = "/change-password";
             System.out.println("Old password error!");
         } else if (oldpassword.equals(newpassword)) {
-            url = "/JPA_WEB_CNPM_war_exploded/change-password";
+            url = "/change-password";
             System.out.println("...");
         } else if (newpassword.equals(confirm_newpassword) == false) {
-            url = "/JPA_WEB_CNPM_war_exploded/change-password";
+            url = "/change-password";
             System.out.println("...");
         } else if (code_verify.equals(code_verify ) == false) {
-            url = "/JPA_WEB_CNPM_war_exploded/change-password";
+            url = "/change-password";
             System.out.println("Code_verify error!");
         } else{
             AccountEntity accountEntity = AccountDAO.getAccount(username);
             accountEntity.setPassword(newpassword);
 
             AccountDAO.Update_Account(accountEntity);
-            url = "/JPA_WEB_CNPM_war_exploded/home";
+            url = "/home";
         }
 
         resp.sendRedirect(url);
@@ -65,23 +64,21 @@ public class Change_Password extends HttpServlet {
             action = "update_password";
         }
         if(action.equals("update_password")){
-            Cookie[] cookies = req.getCookies();
-            Cookie[] c = cookies;
-
-            if(c == null || c.length ==1){
-                String url = "/JPA_WEB_CNPM_war_exploded/home";
+            HttpSession session = req.getSession();
+            if(session.getAttribute("username") == null){
+                String url = "/home";
                 resp.sendRedirect(url);
             }
             else {
                 sendEmail();
                 System.out.println(code);
-                String url = "/WEB-INF/update_password.jsp";
+                String url = "/views/customer/customer-information/change-password.jsp";
                 getServletContext().getRequestDispatcher(url)
                         .forward(req, resp);
             }
         }
         if(action.equals("cancel")){
-            resp.sendRedirect("/JPA_WEB_CNPM_war_exploded/home");
+            resp.sendRedirect("/home");
         }
     }
     private void sendEmail(){

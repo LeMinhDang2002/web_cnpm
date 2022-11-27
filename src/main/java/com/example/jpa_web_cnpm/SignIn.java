@@ -19,19 +19,21 @@ public class SignIn extends HttpServlet {
         String password = req.getParameter("password");
 
         if(AccountDAO.check_Acc_Pass(username,password)){
-            setcookies(req,resp);
+            HttpSession session = req.getSession();
+            session.setMaxInactiveInterval(1800);
+            session.setAttribute("username", username);
         }
         else {
             out.print("Sorry UserName or Password Error!");
         }
 //        getServletContext().getRequestDispatcher(url)
 //                .forward(req, resp);
-        resp.sendRedirect("/JPA_WEB_CNPM_war_exploded/home");
+        resp.sendRedirect("/home");
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String url = "/WEB-INF/guest/sign-in.jsp";
+        String url = "/views/guest/sign-in.jsp";
 
         getServletContext().getRequestDispatcher(url)
                 .forward(req, resp);

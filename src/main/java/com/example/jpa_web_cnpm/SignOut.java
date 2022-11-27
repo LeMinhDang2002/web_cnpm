@@ -11,8 +11,10 @@ import java.io.IOException;
 public class SignOut extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String url = deleteCookie(req,resp);
-        resp.sendRedirect(url);
+//        String url = deleteCookie(req,resp);
+        HttpSession session = req.getSession();
+        session.removeAttribute("username");
+        resp.sendRedirect("/home");
     }
 
     @Override
@@ -29,7 +31,7 @@ public class SignOut extends HttpServlet {
             cookie.setPath("/"); //allow the download application to access it
             resp.addCookie(cookie);
         }
-        String url = "/JPA_WEB_CNPM_war_exploded/home";
+        String url = "/home";
         return url;
     }
 }

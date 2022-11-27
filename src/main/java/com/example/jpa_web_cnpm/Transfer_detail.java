@@ -1,31 +1,27 @@
 package com.example.jpa_web_cnpm;
 
-import com.example.data.AccountDAO;
 import com.example.data.TransactionAccount_DAO;
 import com.example.data.Transfer_DAO;
-import com.example.entity.AccountEntity;
 import com.example.entity.TransactionAccountEntity;
 import com.example.entity.TransferEntity;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.*;
-import javax.swing.*;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.text.DecimalFormat;
-import java.util.Date;
-import java.util.function.DoubleUnaryOperator;
 
-@WebServlet(name = "Transfer", value = "/transfer")
-public class Transfer extends HttpServlet {
+@WebServlet(name = "transfer-detail", value = "/transfer-detail")
+public class Transfer_detail extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
         String action = req.getParameter("action");
         if(action == null){
-            action = "transfer";
+            action = "transfer-detail";
         }
         if(session.getAttribute("username") == null){
             String url = "/home";
@@ -33,67 +29,39 @@ public class Transfer extends HttpServlet {
         }
         else
         {
-            if(action.equals("transfer")) {
-                String url = "/views/customer/transaction/transfer/transfer.jsp";
+            if(action.equals("transfer-detail")) {
+                String url = "/views/customer/transaction/transfer/transfer-detail.jsp";
                 DecimalFormat df = new DecimalFormat("#,###.##");
                 String account = session.getAttribute("username").toString();
+                TransferEntity transfer = (TransferEntity) session.getAttribute("transfer");
                 TransactionAccountEntity transactionAccountEntity = TransactionAccount_DAO.getTransactionAccountEntity(account);
 
                 Double tmp = (Double) transactionAccountEntity.getBalance();
                 req.setAttribute("balance", df.format(tmp));
-                req.setAttribute("transaction", transactionAccountEntity);
+                req.setAttribute("transfer", transfer);
 
                 getServletContext().getRequestDispatcher(url)
                         .forward(req, resp);
             }
-            else if(action.equals("cancel")){
+            else if(action.equals("return-transfer")){
                 resp.sendRedirect("/home");
             }
         }
-//        String url = "/WEB-INF/account.jsp";
-//
-//        getServletContext().getRequestDispatcher(url)
-//                .forward(req, resp);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
-//        session.setMaxInactiveInterval(300);
         String action = req.getParameter("action");
-        if(action.equals("transfer")){
-            String url = "/views/customer/transaction/transfer/transfer-detail.jsp";
-            Date now = new Date();
-
-            TransferEntity transfer = new TransferEntity();
-            transfer.setAccountSrc(req.getParameter("account-number-source"));
-            transfer.setAccountDist(req.getParameter("account-number-destination"));
-            transfer.setAmount(Double.valueOf(req.getParameter("amount")));
-            transfer.setContent(req.getParameter("content"));
-            transfer.setCreateTime(new Timestamp(now.getTime()));
-            transfer.setFee(Double.valueOf(req.getParameter("amount"))*0.003);
-            transfer.setName("Transfer");
-
-            TransactionAccountEntity transactionAccountEntity = TransactionAccount_DAO.getTransactionAccountEntity(transfer.getAccountDist());
-//            System.out.println(transfer);
-            if(TransactionAccount_DAO.check_Transaction_account(transfer.getAccountDist())){
-                session.setAttribute("transfer", transfer);
-                DecimalFormat df = new DecimalFormat("#,###.##");
-                TransactionAccountEntity SRC = TransactionAccount_DAO.getTransactionAccountEntity(transfer.getAccountSrc().toString());
-                Double tmp = (Double) SRC.getBalance();
-                req.setAttribute("balance", df.format(tmp));
-                resp.sendRedirect("/transfer-detail");
-//                url = "/views/customer/transaction/transfer/transfer-detail.jsp";
-            }
-            else {
-                url = "/views/customer/transaction/transfer/transfer.jsp";
-                getServletContext().getRequestDispatcher(url)
-                        .forward(req, resp);
-            }
-
+        if(action.equals("transfer-detail")){
+            Transfer_Money(req, resp);
+            resp.sendRedirect("/transfer");
+        }
+        else if (action.equals("return-transfer")){
+            resp.sendRedirect("/transfer");
         }
     }
-    private void Transfer_Money(HttpServletRequest req, HttpServletResponse resp){
+    public void Transfer_Money(HttpServletRequest req, HttpServletResponse resp){
         HttpSession session = req.getSession();
         TransferEntity transfer = (TransferEntity) session.getAttribute("transfer");
 

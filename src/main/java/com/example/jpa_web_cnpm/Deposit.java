@@ -5,10 +5,7 @@ import com.example.entity.DepositEntity;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.*;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Date;
@@ -65,10 +62,9 @@ public class Deposit extends HttpServlet {
 //
 //        getServletContext().getRequestDispatcher(url)
 //                .forward(req, resp);
-        Cookie[] cookies = req.getCookies();
-        Cookie[] c = cookies;
+        HttpSession session = req.getSession();
 
-        if(c == null || c.length ==1){
+        if(session.getAttribute("username") == null){
             String url = "/home";
             getServletContext().getRequestDispatcher(url)
                     .forward(req, resp);

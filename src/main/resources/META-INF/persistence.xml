@@ -7,8 +7,8 @@
 
         <class>com.example.entity.AccountEntity</class>
         <class>com.example.entity.DepositEntity</class>
-        <class>com.example.entity.TransactionAccountEntity</class>
         <class>com.example.entity.TransferEntity</class>
+        <class>com.example.entity.TransactionAccountEntity</class>
         <properties>
             <property name="hibernate.connection.url"
                       value="jdbc:postgresql://dpg-cdhkrb9a6gdsnlllc95g-a.singapore-postgres.render.com:5432/cnpm_web_database"/>

@@ -1,6 +1,8 @@
 package com.example.data;
 
+import com.example.entity.AccountEntity;
 import com.example.entity.TransactionAccountEntity;
+import com.example.entity.TransferEntity;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -115,6 +117,30 @@ public class TransactionAccount_DAO {
         }
         catch (NoResultException e){
             return null;
+        }
+        finally {
+            entityManager.close();
+        }
+    }
+    public static boolean check_Transaction_account(String account_dist){
+        EntityManager entityManager = DBUtil.getEmFactory().createEntityManager();
+
+        String query = "select a from TransactionAccountEntity a where a.accountNumber =: account_dist";
+        TypedQuery<TransactionAccountEntity> q = entityManager.createQuery(query, TransactionAccountEntity.class);
+        q.setParameter("account_dist", account_dist);
+
+        try {
+            TransactionAccountEntity transactionAccountEntity = q.getSingleResult();
+            if(transactionAccountEntity == null){
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+        catch (NoResultException e){
+            System.out.println(e);
+            return false;
         }
         finally {
             entityManager.close();
