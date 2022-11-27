@@ -18,6 +18,9 @@
     <link rel="stylesheet" href="assets/styles/codicons/codicon.ttf">
 
     <script src="assets/scripts/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 </head>
 
 <body class="bg-light">
@@ -60,8 +63,10 @@
 
 
 <section id="transaction-history-table">
-    <div class="mx-5 my-4">
-        <table class="table">
+    <div>
+        <div class="mx-5 my-4">
+        <input class="form-control" id="myInput" type="text" placeholder="Search..">
+        <table class="table table-bordered table-striped">
             <thead>
             <tr>
                 <th scope="col">#</th>
@@ -73,7 +78,7 @@
                 <th scope="col">Thông tin chi tiết</th>
             </tr>
             </thead>
-            <tbody>
+            <tbody id="myTable">
             <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
             <c:forEach var="tran" items="${list_transfer}">
                 <tr>
@@ -89,6 +94,17 @@
             </tbody>
         </table>
     </div>
+    </div>
+    <script>
+        $(document).ready(function(){
+            $("#myInput").on("keyup", function() {
+                var value = $(this).val().toLowerCase();
+                $("#myTable tr").filter(function() {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+    </script>
 </section>
 </body>
 </html>

@@ -1,7 +1,9 @@
 package com.example.jpa_web_cnpm;
 
+import com.example.data.AccountDAO;
 import com.example.data.TransactionAccount_DAO;
 import com.example.data.Transfer_DAO;
+import com.example.entity.AccountEntity;
 import com.example.entity.TransactionAccountEntity;
 import com.example.entity.TransferEntity;
 
@@ -54,11 +56,47 @@ public class Transfer_detail extends HttpServlet {
         HttpSession session = req.getSession();
         String action = req.getParameter("action");
         if(action.equals("transfer-detail")){
-            Transfer_Money(req, resp);
-            resp.sendRedirect("/transfer");
+            String account = session.getAttribute("username").toString();
+            AccountEntity accountEntity = AccountDAO.getAccount(account);
+            int code_verify = Email.sendEmail(accountEntity.getEmail().toString());
+            int tmp = 0;
+            session.setAttribute("account", account);
+            session.setAttribute("code_verify", code_verify);
+            session.setAttribute("check_number_try", tmp);
+
+            String url = "/views/customer/transaction/transfer/transfer-verify.jsp";
+            getServletContext().getRequestDispatcher(url)
+                    .forward(req, resp);
         }
         else if (action.equals("return-transfer")){
-            resp.sendRedirect("/transfer");
+            resp.sendRedirect("/home");
+        } else if (action.equals("transfer-code-verify"))
+        {
+            String input_code_verify = req.getParameter("code-verify");
+            String code_verify = session.getAttribute("code_verify").toString();
+            int check_number_try = Integer.parseInt(session.getAttribute("check_number_try").toString());
+            check_number_try = check_number_try + 1;
+            session.setAttribute("check_number_try", check_number_try);
+
+            System.out.println(input_code_verify);
+            System.out.println(code_verify);
+            System.out.println(check_number_try);
+
+            if (input_code_verify.equals(code_verify) == false)
+            {
+                if(check_number_try == 3){
+                    resp.sendRedirect("/home");
+                }
+                else {
+                    String url = "/views/customer/transaction/transfer/transfer-verify.jsp";
+                    getServletContext().getRequestDispatcher(url)
+                            .forward(req, resp);
+                }
+            }
+            else {
+                Transfer_Money(req, resp);
+                resp.sendRedirect("/transfer");
+            }
         }
     }
     public void Transfer_Money(HttpServletRequest req, HttpServletResponse resp){

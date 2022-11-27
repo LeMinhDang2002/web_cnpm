@@ -1,6 +1,8 @@
 package com.example.jpa_web_cnpm;
 
+import com.example.data.AccountDAO;
 import com.example.data.TransactionAccount_DAO;
+import com.example.entity.AccountEntity;
 import com.example.entity.TransactionAccountEntity;
 import com.example.entity.TransferEntity;
 
@@ -77,11 +79,46 @@ public class Payment extends HttpServlet {
                     .forward(req, resp);
         }
         else if (action.equals("payment-detail")){
-            System.out.println(session.getAttribute("transfer"));
-            Transfer_detail transfer_detail = new Transfer_detail();
-            transfer_detail.Transfer_Money(req, resp);
 
-            resp.sendRedirect("/payment");
+            String account = session.getAttribute("username").toString();
+            AccountEntity accountEntity = AccountDAO.getAccount(account);
+            int code_verify = Email.sendEmail(accountEntity.getEmail().toString());
+            int tmp = 0;
+            session.setAttribute("account", account);
+            session.setAttribute("code_verify", code_verify);
+            session.setAttribute("check_number_try", tmp);
+
+            url = "/views/customer/transaction/payment/payment-verify.jsp";
+            getServletContext().getRequestDispatcher(url)
+                    .forward(req, resp);
+        } else if (action.equals("payment-code-verify")) {
+            String input_code_verify = req.getParameter("code-verify");
+            String code_verify = session.getAttribute("code_verify").toString();
+            int check_number_try = Integer.parseInt(session.getAttribute("check_number_try").toString());
+            check_number_try = check_number_try + 1;
+            session.setAttribute("check_number_try", check_number_try);
+
+            System.out.println(input_code_verify);
+            System.out.println(code_verify);
+            System.out.println(check_number_try);
+
+            if (input_code_verify.equals(code_verify) == false)
+            {
+                if(check_number_try == 3){
+                    resp.sendRedirect("/home");
+                }
+                else {
+                    url = "/views/customer/transaction/payment/payment-verify.jsp";
+                    getServletContext().getRequestDispatcher(url)
+                            .forward(req, resp);
+                }
+            }
+            else {
+                System.out.println(session.getAttribute("transfer"));
+                Transfer_detail transfer_detail = new Transfer_detail();
+                transfer_detail.Transfer_Money(req, resp);
+                resp.sendRedirect("/payment");
+            }
         } else if (action.equals("cancel")) {
             resp.sendRedirect("/home");
         }

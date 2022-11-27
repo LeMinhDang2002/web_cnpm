@@ -33,6 +33,7 @@ public class Email {
             mgs.setText("Your code verify is "+code);
             Transport.send(mgs);
             System.out.println("Gui gmail r a");
+            System.out.println(code);
         }
         catch (AddressException e){
             System.out.println("Truyen kh dc 1");

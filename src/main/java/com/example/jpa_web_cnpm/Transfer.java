@@ -50,10 +50,6 @@ public class Transfer extends HttpServlet {
                 resp.sendRedirect("/home");
             }
         }
-//        String url = "/WEB-INF/account.jsp";
-//
-//        getServletContext().getRequestDispatcher(url)
-//                .forward(req, resp);
     }
 
     @Override
@@ -90,7 +86,6 @@ public class Transfer extends HttpServlet {
                 getServletContext().getRequestDispatcher(url)
                         .forward(req, resp);
             }
-
         }
     }
     private void Transfer_Money(HttpServletRequest req, HttpServletResponse resp){
