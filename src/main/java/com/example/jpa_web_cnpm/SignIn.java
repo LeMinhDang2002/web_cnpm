@@ -1,7 +1,6 @@
 package com.example.jpa_web_cnpm;
 
 import com.example.data.AccountDAO;
-import com.example.entity.AccountEntity;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;

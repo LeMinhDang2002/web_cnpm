@@ -51,6 +51,25 @@ public class AccountDAO {
         }
     }
 
+    public static AccountEntity getIdentify(String identify){
+        EntityManager entityManager = DBUtil.getEmFactory().createEntityManager();
+
+        String qString = "SELECT a from AccountEntity a where a.identify =: identify";
+        TypedQuery<AccountEntity> q = entityManager.createQuery(qString, AccountEntity.class);
+        q.setParameter("identify", identify);
+        try {
+            AccountEntity account  = q.getSingleResult();
+            return account;
+        }
+        catch (NoResultException e)
+        {
+            return null;
+        }
+        finally {
+            entityManager.close();
+        }
+    }
+
     public static void Insert_Account(AccountEntity account){
         EntityManager entityManager = DBUtil.getEmFactory().createEntityManager();
         EntityTransaction entityTransaction = entityManager.getTransaction();

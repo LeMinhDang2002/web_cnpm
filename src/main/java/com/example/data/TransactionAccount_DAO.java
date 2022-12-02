@@ -1,8 +1,6 @@
 package com.example.data;
 
-import com.example.entity.AccountEntity;
 import com.example.entity.TransactionAccountEntity;
-import com.example.entity.TransferEntity;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;

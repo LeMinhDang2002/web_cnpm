@@ -1,22 +1,17 @@
 package com.example.jpa_web_cnpm;
 
-import com.example.data.AccountDAO;
 import com.example.data.TransactionAccount_DAO;
 import com.example.data.Transfer_DAO;
-import com.example.entity.AccountEntity;
 import com.example.entity.TransactionAccountEntity;
 import com.example.entity.TransferEntity;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
-import javax.swing.*;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.util.Date;
-import java.util.function.DoubleUnaryOperator;
 
 @WebServlet(name = "Transfer", value = "/transfer")
 public class Transfer extends HttpServlet {
