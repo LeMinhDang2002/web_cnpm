@@ -92,7 +92,7 @@ public class Change_Password extends HttpServlet {
 
         Authenticator auth = new Authenticator() {
             public PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication("20133034@student.hcmute.edu.vn", "cctnak11");
+                return new PasswordAuthentication("20133034@student.hcmute.edu.vn", "aimacho");
             }
         };
 

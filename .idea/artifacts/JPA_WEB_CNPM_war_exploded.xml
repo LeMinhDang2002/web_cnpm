@@ -36,6 +36,10 @@
           <element id="library" level="project" name="Maven: org.apache.ant:ant-launcher:1.8.1" />
           <element id="library" level="project" name="Maven: javax.mail:mail:1.4.7" />
           <element id="library" level="project" name="Maven: javax.activation:activation:1.1" />
+          <element id="library" level="project" name="Maven: org.clj-commons:digest:1.4.100" />
+          <element id="library" level="project" name="Maven: org.clojure:clojure:1.10.1" />
+          <element id="library" level="project" name="Maven: org.clojure:spec.alpha:0.2.176" />
+          <element id="library" level="project" name="Maven: org.clojure:core.specs.alpha:0.2.44" />
         </element>
       </element>
       <element id="directory" name="META-INF">
