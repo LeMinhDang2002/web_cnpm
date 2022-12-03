@@ -19,7 +19,7 @@ public class Email {
 
         Authenticator auth = new Authenticator() {
             public PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication("20133034@student.hcmute.edu.vn", "aimacho");
+                return new PasswordAuthentication("20133034@student.hcmute.edu.vn", "");
             }
         };
 
