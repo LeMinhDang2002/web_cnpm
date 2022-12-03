@@ -10,6 +10,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
 
+
 @WebServlet(name = "signup", value = "/signup")
 public class SignUp extends HttpServlet {
     @Override
@@ -27,6 +28,7 @@ public class SignUp extends HttpServlet {
 
         if(action == null){
             action = "input-basic-information";
+
         }
         System.out.println(action);
         if(action.equals("input-basic-information") ){
